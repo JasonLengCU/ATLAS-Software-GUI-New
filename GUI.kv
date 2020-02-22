@@ -1,0 +1,304 @@
+#:kivy 1.11.1
+
+<Circleswitch@Widget>:
+    col: 0,1,0,1
+    canvas.before:
+        Color:
+            rgba: self.col
+        Ellipse:
+            size: self.width*.1, self.width*.1
+            pos: self.pos
+
+
+<Brackets@Widget>:
+    col: 0,0,0,1
+    canvas.before:
+        Color:
+            rgba: self.col
+        Rectangle:
+            size: self.size
+            pos: self.pos
+
+<Extension@Widget>:
+    col: .9,.9,.9,1
+    canvas.before:
+        Color:
+            rgba: self.col
+        Rectangle:
+            size: self.size
+            pos: self.pos
+
+<Transverse@Widget>:
+    col: .6,.6,.6,1
+    canvas.before:
+        Color:
+            rgba: self.col
+        Rectangle:
+            size: self.size
+            pos: self.pos
+
+<Hole@Widget>:
+    col: .8, .8, .8, 1
+    canvas.before:
+        Color:
+            rgba: self.col
+        Ellipse:
+            size: self.size
+            pos: self.pos
+
+
+<Vertical@Widget>:
+    col: .6,.6,.6,1
+    canvas.before:
+        Color:
+            rgba: self.col
+        Rectangle:
+            size: self.size
+            pos: self.pos
+
+
+<Backplate@Widget>:
+    col: .6,.6,.6,1
+    canvas.before:
+        Color:
+            rgba: self.col
+        Ellipse:
+            size: self.size
+            pos: self.pos
+
+<Hall@Widget>:
+    col: 0,1,0,1
+    canvas.before:
+        Color:
+            rgba: self.col
+        Rectangle:
+            size: self.width*.1, self.width*.1
+            pos: self.pos
+
+
+<Petalone@Widget>:
+    col: 0,.5,1,1
+    canvas.before:
+        Color:
+            rgb: self.col
+        Triangle:
+            points: [self.center_x-50,self.center_y-10,self.center_x,self.center_y-70,self.center_x,self.center_y-10]
+
+<Petaltwo@Widget>:
+    col: 0,.5,1,1
+    canvas.before:
+        Color:
+            rgb: self.col
+        Triangle:
+            points: [self.center_x,self.center_y-10,self.center_x,self.center_y-70,self.center_x+50,self.center_y-10]
+
+<Petaldivide@Widget>:
+    col: 0,0,0,1
+    canvas.before:
+        Color:
+            rgba: self.col
+        Line:
+            width: 1.5
+            points: [self.center_x,self.center_y-10,self.center_x,self.center_y-70]
+
+
+<LineCircle1@Widget>:
+    col: 0,0,0,1
+    canvas.before:
+        Color:
+            rgba: self.col
+        Line:
+            width: 2
+            circle:
+                (self.center_x, self.center_y, min(self.width, self.height)
+                / 4, 360, 425)
+<CurvedArrow1@Widget>:
+    col: 0,0,0,1
+    canvas.before:
+        Color:
+            rgb: self.col
+        Triangle:
+            points: [self.center_x+75,self.center_y+50,self.center_x+85,self.center_y+65,self.center_x+90,self.center_y+40]
+
+
+<GUIWidget>:
+    GridLayout:
+        id: gridframe
+        rows: 2
+        cols: 1
+        canvas:
+            Color:
+                rgba: 0.8, 0.8, 0.8, 1
+            Rectangle:
+                pos: self.pos
+                size: root.width, root.height
+        GridLayout:
+            id: gridupper
+            size_hint_y: 0.5
+            rows:1
+            cols:2
+            Image:
+                id: img1
+                source: '<random_name>.jpg'
+                allow_stretch: False
+            Image:
+                id: img2
+                source: '<random_name>.jpg'
+                allow_stretch: False
+        GridLayout:
+            id: limitgridmain
+            size_hint_y:.5
+            rows: 1
+            cols: 3
+            canvas:
+                Color:
+                    rgba: .8, .8, .8, 1
+                Rectangle:
+                    pos: self.pos
+                    size: self.width, self.height
+            FloatLayout:
+                id: left
+                canvas:
+                    Color:
+                        rgba: .8, .8, .8, 1
+                    Rectangle:
+                        pos: self.width*0, left.height*0
+                        size: self.width*1, self.height*1
+                Circleswitch:
+                    pos_hint: {'x': .005, 'y': .6}
+                    id: L1
+                Circleswitch:
+                    pos_hint: {'x': .9, 'y': .6}
+                    id: L2
+                Circleswitch:
+                    pos_hint:{'x': .45,'y': .89}
+                    id: L3
+                Circleswitch:
+                    pos_hint:{'x': .45,'y': .15}
+                    id: L4
+                Brackets:
+                    pos_hint:{'x': .1,'y': .2}
+                    size_hint:.1, .3
+                    id: B1
+                Brackets:
+                    pos_hint:{'x': .8,'y': .2}
+                    size_hint:.1, .3
+                    id: B2
+                Extension:
+                    pos_hint:{'x': .15,'y': .25}
+                    size_hint:.1, .3
+                    id: Ext1
+                Extension:
+                    pos_hint:{'x': .75,'y': .25}
+                    size_hint:.1, .3
+                    id: Ext2
+                Transverse:
+                    pos_hint:{'x': .25,'y': .3}
+                    size_hint:.5, .3
+                    id: Trns
+                Hole:
+                    pos_hint:{'x': 0.37,'y': .32}
+                    size_hint:.25, .25
+                    id: holeleft
+                Label:
+                    text: '2-D Top View: Extension\nand Transverse Frames'
+                    font_size: sp(15)
+                    color: 0,0,0,1
+                    pos_hint: {'x': 0,'y': -.45}
+                    bold: True
+
+            FloatLayout:
+                id: center
+                canvas:
+                    Color:
+                        rgba: .8, .8, .8, 1
+                    Rectangle:
+                        pos: self.width*1, center.height*0
+                        size: self.width*1, self.height*1
+                Vertical:
+                    pos_hint: {'x': .45, 'y': .45}
+                    size_hint: .1,.4
+                    id: vertical
+                Circleswitch:
+                    pos_hint: {'x': .45, 'y': .89}
+                    id: L5top
+                Circleswitch:
+                    pos_hint: {'x': .45, 'y': .13}
+                    id: L6bot
+                Petalone:
+                    pos_hint: {'x': .0, 'y': 0}
+                    id: petalone
+                Petaltwo:
+                    pos_hint: {'x': .0, 'y': 0}
+                    id: petalone
+                Petaldivide:
+                    pos_hint: {'x': .0, 'y': 0}
+                    id: petalline
+                Label:
+                    canvas:
+                    text: '2-D Side View:\n Vertical Frame'
+                    pos_hint:{'x': .25,'y': -.2}
+                    size_hint: .5, .5
+                    color: 0,0,0,1
+                    bold: True
+            FloatLayout:
+                id: right
+                canvas:
+                    Color:
+                        rgba: .8, .8, .8, 1
+                    Rectangle:
+                        pos: self.width*2, right.height*0
+                        size: self.width*1, self.height*1
+                Backplate:
+                    pos_hint:{'x': .25,'y': .25}
+                    size_hint: .5, .5
+                    id: backplate
+                Circleswitch:
+                    pos_hint: {'x': .45, 'y': .27}
+                    id: L7top
+                Circleswitch:
+                    pos_hint: {'x': .45, 'y': .63}
+                    id: L8bot
+                Circleswitch:
+                    pos_hint: {'x': .26, 'y': .45}
+                    id: L9left
+                Circleswitch:
+                    pos_hint: {'x': .64, 'y': .45}
+                    id: L10right
+                Hall:
+                    pos_hint: {'x': .84, 'y': .45}
+                    id: H1right
+                Hall:
+                    pos_hint: {'x': .04, 'y': .45}
+                    id: H2left
+                Label:
+                    canvas:
+                    text: '2-D Top View: \nEnd Effector Back Plate'
+                    pos_hint:{'x': 0,'y': -.45}
+                    color: 0,0,0,1
+                    bold: True
+                LineCircle1:
+                    pos_hint:{'x': .06,'y': .1}
+                Button:
+                    pos_hint: {'x': .8, 'y': .8}
+                    size_hint: .2, .2
+                    text: 'STOP'
+                    background_color: (2, 0, 0, 1)
+                CurvedArrow1:
+                    pos_hint: {'x': 0, 'y': 0}
+                    id: arrow1
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
