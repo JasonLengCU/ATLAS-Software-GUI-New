@@ -135,76 +135,40 @@ class GUIWidget(FloatLayout):
         if sum(self.Push) <= 1:
             # command w
             if self.Push[0]:
-                self.ids.L1.col = 1, 0, 0, 1
                 cmdout = 'w'
-            else:
-                self.ids.L1.col = 0, 1, 0, 1
             # command s
             if self.Push[1]:
-                self.ids.L4.col = 1, 0, 0, 1
                 cmdout = 's'
-            else:
-                self.ids.L4.col = 0, 1, 0, 1
             # command a
             if self.Push[2]:
-                self.ids.L3.col = 1, 0, 0, 1
                 cmdout = 'a'
-            else:
-                self.ids.L3.col = 0, 1, 0, 1
             # command d
             if self.Push[3]:
-                self.ids.L2.col = 1, 0, 0, 1
                 cmdout = 'd'
-            else:
-                self.ids.L2.col = 0, 1, 0, 1
             # command h
             if self.Push[4]:
-                self.ids.L5top.col = 1, 0, 0, 1
                 cmdout = 'h'
-            else:
-                self.ids.L5top.col = 0, 1, 0, 1
             # command l
             if self.Push[5]:
-                self.ids.L6bot.col = 1, 0, 0, 1
                 cmdout = 'l'
-            else:
-                self.ids.L6bot.col = 0, 1, 0, 1
             # command q
             if self.Push[6]:
-                self.ids.H2left.col = 1, 0, 0, 1
                 cmdout = 'q'
-            else:
-                self.ids.H2left.col = 0, 1, 0, 1
             # command e
             if self.Push[7]:
-                self.ids.H1right.col = 1, 0, 0, 1
                 cmdout = 'e'
-            else:
-                self.ids.H1right.col = 0, 1, 0, 1
             # command n
             if self.Push[8]:
-                self.ids.L7top.col = 1, 0, 0, 1
                 cmdout = 'n'
-            else:
-                self.ids.L7top.col = 0, 1, 0, 1
             # command m
             if self.Push[9]:
-                self.ids.L8bot.col = 1, 0, 0, 1
                 cmdout = 'm'
-            else:
-                self.ids.L8bot.col = 0, 1, 0, 1
             # command c
             if self.Push[10]:
-                self.ids.L9left.col = 1, 0, 0, 1
                 cmdout = 'c'
-            else:
-                self.ids.L9left.col = 0, 1, 0, 1
             # command f
             if self.Push[11]:
-                self.ids.L10right.col = 1, 0, 0, 1
                 cmdout = 'f'
-            else:
-                self.ids.L10right.col = 0, 1, 0, 1
         print(cmdout)
         self.s.sendto(cmdout.encode('utf-8'), ("127.0.0.1", 5555))
 
@@ -225,20 +189,16 @@ class GUIWidget(FloatLayout):
     def limcheck(self, dt):
         # line here for reading in limit string
         Lim = "010"
-        print('hello bitch')
         if Lim[0]:
             self.ids.L10right.col = 1, 0, 0, 1
-            print('hello')
         else:
             self.ids.L10right.col = 0, 1, 0, 1
         if Lim[1]:
             self.ids.L10right.col = 1, 0, 0, 1
-            print('hello')
         else:
             self.ids.L10right.col = 0, 1, 0, 1
         if Lim[2]:
             self.ids.L10right.col = 1, 0, 0, 1
-            print('hello')
         else:
             self.ids.L10right.col = 0, 1, 0, 1
 
