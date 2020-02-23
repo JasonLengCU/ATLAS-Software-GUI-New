@@ -6,6 +6,8 @@ from kivy.core.image import Image
 from kivy.core.window import Window
 import cv2
 import socket
+from threading import Thread
+import queue
 
 
 def conn():
@@ -25,6 +27,14 @@ class GUIWidget(FloatLayout):
     capture2 = cv2.VideoCapture(-1)
     # initialization of key press check list
     Push = [0,0, 0,0, 0,0, 0,0, 0,0, 0,0]
+    # que = queue.Queue()
+    # x = Thread(target=conn())
+    # x.start()
+    # x.join()
+    # print(que.get())
+    # s = que.get()
+    # print('ot')
+    # x.stop()
     s = conn()
 
     def __init__(self, **kwargs):
