@@ -24,17 +24,11 @@ def conn():
 
 class GUIWidget(FloatLayout):
     capture = cv2.VideoCapture(-1)
+    ret1, frame1 = capture.read()
     capture2 = cv2.VideoCapture(-1)
+    ret2, frame2 = capture2.read()
     # initialization of key press check list
     Push = [0,0, 0,0, 0,0, 0,0, 0,0, 0,0]
-    # que = queue.Queue()
-    # x = Thread(target=conn())
-    # x.start()
-    # x.join()
-    # print(que.get())
-    # s = que.get()
-    # print('ot')
-    # x.stop()
     s = conn()
 
     def __init__(self, **kwargs):
@@ -94,15 +88,15 @@ class GUIWidget(FloatLayout):
         if args[1] == 102:
             self.Push[11] = True
 
+    def vidread(self,dt):
+        self.ret1, self.frame1 = self.capture.read()
+        self.ret2, self.frame2 = self.capture2.read()
+
     def vidupdate(self, dt):
-        # print(cv2.VideoCapture.isOpened(self.capture))
         # Camera 1
-        # read in frame
-        ret, frame1 = self.capture.read()
+        ret = self.ret1
+        frame1 = self.frame1
         if ret:
-            # finds video size for line positioning
-            height, width, channels = frame1.shape
-            frame1 = cv2.rectangle(frame1, pt1=(75, 75), pt2=(width - 75, height - 75), color=(0, 255, 0), thickness=5)
             # flips frame to correct orientation
             buf1 = cv2.flip(frame1, 0)
             # creates texture to change image
@@ -117,16 +111,15 @@ class GUIWidget(FloatLayout):
 
     def vidupdate2(self, dt):
         # Camera 2
-        # read in frame
-        # Change capture here to use 2 different feeds
-        # ret, frame2 = self.capture2.read()
-        ret, frame2 = self.capture.read()
+        ret = self.ret2
+        frame2 = self.frame2
         if ret:
             # finds video size for line positioning
             height, width, channels = frame2.shape
             # adds circle to video
             centx = round(width / 2)
             centy = round(height / 2)
+            cv2.rectangle(frame2, pt1=(75, 75), pt2=(width - 75, height - 75), color=(0, 255, 0), thickness=5)
             cv2.circle(frame2, center=(centx, centy), radius=50, color=(0, 255, 0), thickness=5)
             # flips frame to correct orientation
             buf2 = cv2.flip(frame2, 0)
@@ -192,7 +185,7 @@ class GUIWidget(FloatLayout):
     def vidconnect2(self,dt):
         if not cv2.VideoCapture.isOpened(self.capture2):
             print('Reconnecting Camera 2')
-            self.capture2 = cv2.VideoCapture(0)
+            self.capture2 = cv2.VideoCapture(1)
             # self.capture2 = cv2.VideoCapture('udp://192.168.1.30:1235?overrun_nonfatal=1&fifo_size=50000000?buffer_size=10000000',cv2.CAP_FFMPEG)
             self.capture2.set(cv2.CAP_PROP_BUFFERSIZE, 1)
 
@@ -217,10 +210,11 @@ class GUIApp(App):
 
     def build(self):
         gui = GUIWidget()
-        Clock.schedule_interval(gui.vidupdate, 1.0/60)
-        Clock.schedule_interval(gui.vidupdate2, 1.0/60)
         Clock.schedule_interval(gui.vidconnect, 1.0/30)
         Clock.schedule_interval(gui.vidconnect2, 1.0/30)
+        Clock.schedule_interval(gui.vidread, 1.0/30)
+        Clock.schedule_interval(gui.vidupdate, 1.0/60)
+        Clock.schedule_interval(gui.vidupdate2, 1.0/60)
         Clock.schedule_interval(gui.cmdout, 1.0/30)
         Clock.schedule_interval(gui.limcheck, 1.0/3)
         return gui
