@@ -90,7 +90,9 @@ class GUIWidget(FloatLayout):
 
     def vidread(self,dt):
         self.ret1, self.frame1 = self.capture.read()
-        self.ret2, self.frame2 = self.capture2.read()
+        # self.ret2, self.frame2 = self.capture2.read()
+        self.ret2 = self.ret1
+        self.frame2 = self.frame1
 
     def vidupdate(self, dt):
         # Camera 1
@@ -119,8 +121,8 @@ class GUIWidget(FloatLayout):
             # adds circle to video
             centx = round(width / 2)
             centy = round(height / 2)
-            cv2.rectangle(frame2, pt1=(75, 75), pt2=(width - 75, height - 75), color=(0, 255, 0), thickness=5)
-            cv2.circle(frame2, center=(centx, centy), radius=50, color=(0, 255, 0), thickness=5)
+            # cv2.rectangle(frame2, pt1=(75, 75), pt2=(width - 75, height - 75), color=(0, 255, 0), thickness=5)
+            # cv2.circle(frame2, center=(centx, centy), radius=50, color=(0, 255, 0), thickness=5)
             # flips frame to correct orientation
             buf2 = cv2.flip(frame2, 0)
             # creates texture to change image
@@ -177,21 +179,21 @@ class GUIWidget(FloatLayout):
 
     def vidconnect(self,dt):
         if not cv2.VideoCapture.isOpened(self.capture):
-            print('Reconnecting Camera 1')
+            # print('Reconnecting Camera 1')
             self.capture = cv2.VideoCapture(0)
             # self.capture = cv2.VideoCapture('udp://192.168.1.30:1234?overrun_nonfatal=1&fifo_size=50000000?buffer_size=10000000',cv2.CAP_FFMPEG)
             self.capture.set(cv2.CAP_PROP_BUFFERSIZE, 1)
 
     def vidconnect2(self,dt):
         if not cv2.VideoCapture.isOpened(self.capture2):
-            print('Reconnecting Camera 2')
+            # print('Reconnecting Camera 2')
             self.capture2 = cv2.VideoCapture(1)
             # self.capture2 = cv2.VideoCapture('udp://192.168.1.30:1235?overrun_nonfatal=1&fifo_size=50000000?buffer_size=10000000',cv2.CAP_FFMPEG)
             self.capture2.set(cv2.CAP_PROP_BUFFERSIZE, 1)
 
     def limcheck(self, dt):
         # line here for reading in limit string
-        Lim = "010"
+        Lim = "111"
         if Lim[0]:
             self.ids.L10right.col = 1, 0, 0, 1
         else:
