@@ -8,24 +8,35 @@ import cv2
 import socket
 
 
-def conn():
+def connectionout():
     host = "localhost"
     port = 5555
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     try:
         s.bind((host, port))
-        print('Port Bound')
+        print('Outgoing Port Bound')
     except socket.error as e:
         print(str(e))
     return s
 
+def connectionin():
+    host = "localhost"
+    port = 5556
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    try:
+        s.bind((host, port))
+        print('Incoming Port Bound')
+    except socket.error as e:
+        print(str(e))
+    return s
 
 class GUIWidget(FloatLayout):
     capture = cv2.VideoCapture(-1)
     capture2 = cv2.VideoCapture(-1)
     # initialization of key press check list
     Push = [0,0, 0,0, 0,0, 0,0, 0,0, 0,0]
-    s = conn()
+    sout = connectionout()
+    sin = connectionin()
 
     def __init__(self, **kwargs):
         super(GUIWidget, self).__init__(**kwargs)
@@ -92,7 +103,6 @@ class GUIWidget(FloatLayout):
         if ret:
             # finds video size for line positioning
             height, width, channels = frame1.shape
-            frame1 = cv2.rectangle(frame1, pt1=(75, 75), pt2=(width - 75, height - 75), color=(0, 255, 0), thickness=5)
             # flips frame to correct orientation
             buf1 = cv2.flip(frame1, 0)
             # creates texture to change image
@@ -117,6 +127,7 @@ class GUIWidget(FloatLayout):
             # adds circle to video
             centx = round(width / 2)
             centy = round(height / 2)
+            frame1 = cv2.rectangle(frame2, pt1=(75, 75), pt2=(width - 75, height - 75), color=(0, 255, 0), thickness=5)
             cv2.circle(frame2, center=(centx, centy), radius=50, color=(0, 255, 0), thickness=5)
             # flips frame to correct orientation
             buf2 = cv2.flip(frame2, 0)
@@ -206,7 +217,7 @@ class GUIWidget(FloatLayout):
             else:
                 self.ids.L10right.col = 0, 1, 0, 1
         print(cmdout)
-        self.s.sendto(cmdout.encode('utf-8'), ("127.0.0.1", 5555))
+        self.sout.sendto(cmdout.encode('utf-8'), ("127.0.0.1", 5555))
 
     def vidconnect(self,dt):
         if not cv2.VideoCapture.isOpened(self.capture):
@@ -218,27 +229,23 @@ class GUIWidget(FloatLayout):
     def vidconnect2(self,dt):
         if not cv2.VideoCapture.isOpened(self.capture2):
             print('Reconnecting Camera 2')
-            # self.capture2 = cv2.VideoCapture(0)
-            # self.capture2 = cv2.VideoCapture('udp://192.168.1.30:1235?overrun_nonfatal=1&fifo_size=50000000?buffer_size=10000000',cv2.CAP_FFMPEG)
+            self.capture2 = cv2.VideoCapture(0)
+            self.capture2 = cv2.VideoCapture('udp://192.168.1.30:1235?overrun_nonfatal=1&fifo_size=50000000?buffer_size=10000000',cv2.CAP_FFMPEG)
             self.capture2.set(cv2.CAP_PROP_BUFFERSIZE, 1)
 
     def limcheck(self, dt):
         # line here for reading in limit string
         Lim = "010"
-        print('hello bitch')
         if Lim[0]:
             self.ids.L10right.col = 1, 0, 0, 1
-            print('hello')
         else:
             self.ids.L10right.col = 0, 1, 0, 1
         if Lim[1]:
             self.ids.L10right.col = 1, 0, 0, 1
-            print('hello')
         else:
             self.ids.L10right.col = 0, 1, 0, 1
         if Lim[2]:
             self.ids.L10right.col = 1, 0, 0, 1
-            print('hello')
         else:
             self.ids.L10right.col = 0, 1, 0, 1
 
@@ -248,13 +255,11 @@ class GUIApp(App):
     def build(self):
         gui = GUIWidget()
         Clock.schedule_interval(gui.vidupdate, 1.0/240)
-        # Clock.schedule_interval(gui.vidupdate, 1.0/5)
         Clock.schedule_interval(gui.vidupdate2, 1.0/240)
-        # Clock.schedule_interval(gui.vidupdate2, 1.0/5)
         Clock.schedule_interval(gui.vidconnect, 1.0/30)
-        Clock.schedule_interval(gui.vidconnect2, 1.0/30)
-        # Clock.schedule_interval(gui.cmdout, 1.0/30)
-        # Clock.schedule_interval(gui.limcheck, 1.0/3)
+        # Clock.schedule_interval(gui.vidconnect2, 1.0/30)
+        Clock.schedule_interval(gui.cmdout, 1.0/30)
+        Clock.schedule_interval(gui.limcheck, 1.0/3)
         return gui
 
 
