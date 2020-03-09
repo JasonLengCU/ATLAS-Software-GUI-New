@@ -12,11 +12,11 @@ def connectionout():
     host = "localhost"
     port = 5555
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    try:
-        s.bind((host, port))
-        print('Outgoing Port Bound')
-    except socket.error as e:
-        print(str(e))
+    # try:
+    #     s.bind((host, port))
+    #     print('Outgoing Port Bound')
+    # except socket.error as e:
+    #     print(str(e))
     return s
 
 def connectionin():
@@ -32,7 +32,8 @@ class GUIWidget(FloatLayout):
     # initialization of key press check list
     Push = [0,0, 0,0, 0,0, 0,0, 0,0, 0,0]
     sout = connectionout()
-    # sin = connectionin()
+    sin = connectionin()
+    Lim = "000"
 
     def __init__(self, **kwargs):
         super(GUIWidget, self).__init__(**kwargs)
@@ -197,17 +198,17 @@ class GUIWidget(FloatLayout):
             self.capture2.set(cv2.CAP_PROP_BUFFERSIZE, 1)
 
     def limcheck(self, dt):
-        # line here for reading in limit string
-        Lim = "000"
-        if Lim[0]:
+        # data, addr = self.sin.recvfrom(1024)
+        # self.Lim = data.decode("utf-8")
+        if self.Lim[0]:
             self.ids.L10right.col = 1, 0, 0, 1
         else:
             self.ids.L10right.col = 0, 1, 0, 1
-        if Lim[1]:
+        if self.Lim[1]:
             self.ids.L10right.col = 1, 0, 0, 1
         else:
             self.ids.L10right.col = 0, 1, 0, 1
-        if Lim[2]:
+        if self.Lim[2]:
             self.ids.L10right.col = 1, 0, 0, 1
         else:
             self.ids.L10right.col = 0, 1, 0, 1
