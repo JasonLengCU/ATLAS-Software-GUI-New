@@ -20,15 +20,11 @@ def connectionout():
     return s
 
 def connectionin():
-    host = "localhost"
-    port = 5556
-    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    try:
-        s.bind((host, port))
-        print('Incoming Port Bound')
-    except socket.error as e:
-        print(str(e))
-    return s
+    UDP_IP = "127.0.0.1"
+    UDP_PORT = 5556
+    sock = socket.socket(socket.AF_INET,socket.SOCK_DGRAM)
+    sock.bind((UDP_IP, UDP_PORT))
+    return sock
 
 class GUIWidget(FloatLayout):
     capture = cv2.VideoCapture(-1)
@@ -36,7 +32,7 @@ class GUIWidget(FloatLayout):
     # initialization of key press check list
     Push = [0,0, 0,0, 0,0, 0,0, 0,0, 0,0]
     sout = connectionout()
-    sin = connectionin()
+    # sin = connectionin()
 
     def __init__(self, **kwargs):
         super(GUIWidget, self).__init__(**kwargs)
@@ -68,6 +64,9 @@ class GUIWidget(FloatLayout):
             self.Push[10] = False
         if args[1] == 102:
             self.Push[11] = False
+        if args[1] == 49:
+            print('Begin receive')
+            self.sin = connectionin()
 
     def _keydown(self, *args):
         if args[1] == 119:
@@ -146,76 +145,40 @@ class GUIWidget(FloatLayout):
         if sum(self.Push) <= 1:
             # command w
             if self.Push[0]:
-                self.ids.L1.col = 1, 0, 0, 1
                 cmdout = 'w'
-            else:
-                self.ids.L1.col = 0, 1, 0, 1
             # command s
             if self.Push[1]:
-                self.ids.L4.col = 1, 0, 0, 1
                 cmdout = 's'
-            else:
-                self.ids.L4.col = 0, 1, 0, 1
             # command a
             if self.Push[2]:
-                self.ids.L3.col = 1, 0, 0, 1
                 cmdout = 'a'
-            else:
-                self.ids.L3.col = 0, 1, 0, 1
             # command d
             if self.Push[3]:
-                self.ids.L2.col = 1, 0, 0, 1
                 cmdout = 'd'
-            else:
-                self.ids.L2.col = 0, 1, 0, 1
             # command h
             if self.Push[4]:
-                self.ids.L5top.col = 1, 0, 0, 1
                 cmdout = 'h'
-            else:
-                self.ids.L5top.col = 0, 1, 0, 1
             # command l
             if self.Push[5]:
-                self.ids.L6bot.col = 1, 0, 0, 1
                 cmdout = 'l'
-            else:
-                self.ids.L6bot.col = 0, 1, 0, 1
             # command q
             if self.Push[6]:
-                self.ids.H2left.col = 1, 0, 0, 1
                 cmdout = 'q'
-            else:
-                self.ids.H2left.col = 0, 1, 0, 1
             # command e
             if self.Push[7]:
-                self.ids.H1right.col = 1, 0, 0, 1
                 cmdout = 'e'
-            else:
-                self.ids.H1right.col = 0, 1, 0, 1
             # command n
             if self.Push[8]:
-                self.ids.L7top.col = 1, 0, 0, 1
                 cmdout = 'n'
-            else:
-                self.ids.L7top.col = 0, 1, 0, 1
             # command m
             if self.Push[9]:
-                self.ids.L8bot.col = 1, 0, 0, 1
                 cmdout = 'm'
-            else:
-                self.ids.L8bot.col = 0, 1, 0, 1
             # command c
             if self.Push[10]:
-                self.ids.L9left.col = 1, 0, 0, 1
                 cmdout = 'c'
-            else:
-                self.ids.L9left.col = 0, 1, 0, 1
             # command f
             if self.Push[11]:
-                self.ids.L10right.col = 1, 0, 0, 1
                 cmdout = 'f'
-            else:
-                self.ids.L10right.col = 0, 1, 0, 1
         print(cmdout)
         self.sout.sendto(cmdout.encode('utf-8'), ("127.0.0.1", 5555))
 
@@ -230,12 +193,12 @@ class GUIWidget(FloatLayout):
         if not cv2.VideoCapture.isOpened(self.capture2):
             print('Reconnecting Camera 2')
             self.capture2 = cv2.VideoCapture(0)
-            self.capture2 = cv2.VideoCapture('udp://192.168.1.30:1235?overrun_nonfatal=1&fifo_size=50000000?buffer_size=10000000',cv2.CAP_FFMPEG)
+            # self.capture2 = cv2.VideoCapture('udp://192.168.1.30:1235?overrun_nonfatal=1&fifo_size=50000000?buffer_size=10000000',cv2.CAP_FFMPEG)
             self.capture2.set(cv2.CAP_PROP_BUFFERSIZE, 1)
 
     def limcheck(self, dt):
         # line here for reading in limit string
-        Lim = "010"
+        Lim = "000"
         if Lim[0]:
             self.ids.L10right.col = 1, 0, 0, 1
         else:
