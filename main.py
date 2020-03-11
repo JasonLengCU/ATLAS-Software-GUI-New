@@ -9,22 +9,22 @@ import socket
 
 
 def connectionout():
-    host = "localhost"
-    port = 5555
-    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    # try:
-    #     s.bind((host, port))
-    #     print('Outgoing Port Bound')
-    # except socket.error as e:
-    #     print(str(e))
+    TCP_IP = "127.0.0.1"
+    TCP_PORT = 5555
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    s.bind((TCP_IP, TCP_PORT))
+    print('Outbound Connection Online')
+    s.listen(1)
     return s
 
 def connectionin():
-    UDP_IP = "127.0.0.1"
-    UDP_PORT = 5556
-    sock = socket.socket(socket.AF_INET,socket.SOCK_DGRAM)
-    sock.bind((UDP_IP, UDP_PORT))
-    return sock
+    TCP_IP = "127.0.0.1"
+    TCP_PORT = 5556
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    s.bind((TCP_IP, TCP_PORT))
+    print('Inbound Connection Online')
+    s.listen(1)
+    return s
 
 class GUIWidget(FloatLayout):
     capture = cv2.VideoCapture(-1)
@@ -33,7 +33,9 @@ class GUIWidget(FloatLayout):
     Push = [0,0, 0,0, 0,0, 0,0, 0,0, 0,0]
     sout = connectionout()
     sin = connectionin()
-    Lim = "000"
+    Lim = "0000"
+    conn_out = 0
+    conn_in = 0
 
     def __init__(self, **kwargs):
         super(GUIWidget, self).__init__(**kwargs)
@@ -181,7 +183,9 @@ class GUIWidget(FloatLayout):
             if self.Push[11]:
                 cmdout = 'f'
         print(cmdout)
-        self.sout.sendto(cmdout.encode('utf-8'), ("127.0.0.1", 5555))
+        if not self.conn_out:
+            self.conn_out, addr = self.sout.accept()
+        self.conn_out.sendall(cmdout.encode('utf-8'))
 
     def vidconnect(self,dt):
         if not cv2.VideoCapture.isOpened(self.capture):
@@ -193,22 +197,31 @@ class GUIWidget(FloatLayout):
     def vidconnect2(self,dt):
         if not cv2.VideoCapture.isOpened(self.capture2):
             print('Reconnecting Camera 2')
-            self.capture2 = cv2.VideoCapture(0)
+            # self.capture2 = cv2.VideoCapture(0)
             # self.capture2 = cv2.VideoCapture('udp://192.168.1.30:1235?overrun_nonfatal=1&fifo_size=50000000?buffer_size=10000000',cv2.CAP_FFMPEG)
             self.capture2.set(cv2.CAP_PROP_BUFFERSIZE, 1)
 
     def limcheck(self, dt):
-        # data, addr = self.sin.recvfrom(1024)
-        # self.Lim = data.decode("utf-8")
+        if not self.conn_in:
+            self.conn_in, addr = self.sin.accept()
+        data, addr = self.conn_in.recvfrom(4)
+        self.Lim = data.decode("utf-8")
+        print(self.Lim)
+        self.Lim = list(map(int, self.Lim))
         if self.Lim[0]:
-            self.ids.L10right.col = 1, 0, 0, 1
+            self.ids.L7top.col = 1, 0, 0, 1
         else:
-            self.ids.L10right.col = 0, 1, 0, 1
+            self.ids.L7top.col = 0, 1, 0, 1
+            print('green')
         if self.Lim[1]:
-            self.ids.L10right.col = 1, 0, 0, 1
+            self.ids.L8bot.col = 1, 0, 0, 1
         else:
-            self.ids.L10right.col = 0, 1, 0, 1
+            self.ids.L8bot.col = 0, 1, 0, 1
         if self.Lim[2]:
+            self.ids.L9left.col = 1, 0, 0, 1
+        else:
+            self.ids.L9left.col = 0, 1, 0, 1
+        if self.Lim[3]:
             self.ids.L10right.col = 1, 0, 0, 1
         else:
             self.ids.L10right.col = 0, 1, 0, 1
@@ -223,7 +236,7 @@ class GUIApp(App):
         Clock.schedule_interval(gui.vidconnect, 1.0/30)
         # Clock.schedule_interval(gui.vidconnect2, 1.0/30)
         Clock.schedule_interval(gui.cmdout, 1.0/30)
-        Clock.schedule_interval(gui.limcheck, 1.0/3)
+        Clock.schedule_interval(gui.limcheck, 1.0/30)
         return gui
 
 
