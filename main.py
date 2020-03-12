@@ -226,6 +226,10 @@ class GUIWidget(FloatLayout):
         else:
             self.ids.L10right.col = 0, 1, 0, 1
 
+
+
+
+
 class GUIApp(App):
     title = 'Test GUI by Charles'
 
@@ -234,9 +238,10 @@ class GUIApp(App):
         Clock.schedule_interval(gui.vidupdate, 1.0/240)
         Clock.schedule_interval(gui.vidupdate2, 1.0/240)
         Clock.schedule_interval(gui.vidconnect, 1.0/30)
+
         # Clock.schedule_interval(gui.vidconnect2, 1.0/30)
-        Clock.schedule_interval(gui.cmdout, 1.0/30)
-        Clock.schedule_interval(gui.limcheck, 1.0/30)
+       # Clock.schedule_interval(gui.cmdout, 1.0/30)
+        #Clock.schedule_interval(gui.limcheck, 1.0/30)
         return gui
 
 
