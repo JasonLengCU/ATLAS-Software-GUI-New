@@ -241,6 +241,24 @@ class GUIWidget(FloatLayout):
             self.ids.L10right.col = 1, 0, 0, 1
         else:
             self.ids.L10right.col = 0, 1, 0, 1
+# make shapes move
+
+
+    def _keyup(self, *args):
+        if args[1] == 57: # corresponds to key 9
+            #  print(input(newposition))
+            #print(self.ids.vertical.pos_hint)
+            print(self.ids.vertical.pos_hint['x'])
+
+        if args[1] == 56: # corresponds to key 8
+        #  self.ids.L5top.pos_hint = {'x': 0,'y': 0}
+            stringtest = int('400')
+        # print(input(stringtest))
+            newposition = (stringtest - 200)/200
+            print(newposition)
+            self.ids.vertical.pos_hint = {'x': .5,'y': .5+newposition}
+            print(self.ids.vertical.pos_hint['x'])
+
 
 
 
@@ -256,13 +274,11 @@ class GUIApp(App):
         Clock.schedule_interval(gui.vidconnect, 1.0/30)
 
         # Clock.schedule_interval(gui.vidconnect2, 1.0/30)
-<<<<<<< HEAD
        # Clock.schedule_interval(gui.cmdout, 1.0/30)
         #Clock.schedule_interval(gui.limcheck, 1.0/30)
-=======
         # Clock.schedule_interval(gui.cmdout, 1.0/30)
         # Clock.schedule_interval(gui.limcheck, 1.0w/30)
->>>>>>> 50c075362bb87b85430a1f78146228e34ad80ec1
+
         return gui
 
 
