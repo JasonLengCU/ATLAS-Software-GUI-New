@@ -30,7 +30,7 @@ class GUIWidget(FloatLayout):
     capture = cv2.VideoCapture(-1)
     capture2 = cv2.VideoCapture(-1)
     # initialization of key press check list
-    Push = [0,0, 0,0, 0,0, 0,0, 0,0, 0,0]
+    Push = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     sout = connectionout()
     sin = connectionin()
     Lim = "0000"
@@ -67,9 +67,10 @@ class GUIWidget(FloatLayout):
             self.Push[10] = False
         if args[1] == 102:
             self.Push[11] = False
-        if args[1] == 49:
-            print('Begin receive')
-            self.sin = connectionin()
+        if args[1] == 111:
+            self.Push[12] = False
+        if args[1] == 105:
+            self.Push[13] = False
 
     def _keydown(self, *args):
         if args[1] == 119:
@@ -96,6 +97,16 @@ class GUIWidget(FloatLayout):
             self.Push[10] = True
         if args[1] == 102:
             self.Push[11] = True
+        if args[1] == 111:
+            self.Push[12] = True
+        if args[1] == 105:
+            self.Push[13] = True
+            print('i')
+        if args[1] == 49:
+            print(self.ids.L5top.pos_hint)
+            print(self.ids.L5top.pos_hint['x'])
+        if args[1] == 50:
+            self.ids.L5top.pos_hint = {'x': 0,'y': 0}
 
     def vidupdate(self, dt):
         # print(cv2.VideoCapture.isOpened(self.capture))
@@ -182,6 +193,12 @@ class GUIWidget(FloatLayout):
             # command f
             if self.Push[11]:
                 cmdout = 'f'
+            # command o
+            if self.Push[12]:
+                cmdout = 'o'
+            # command o
+            if self.Push[13]:
+                cmdout = 'i'
         print(cmdout)
         if not self.conn_out:
             self.conn_out, addr = self.sout.accept()
@@ -212,7 +229,6 @@ class GUIWidget(FloatLayout):
             self.ids.L7top.col = 1, 0, 0, 1
         else:
             self.ids.L7top.col = 0, 1, 0, 1
-            print('green')
         if self.Lim[1]:
             self.ids.L8bot.col = 1, 0, 0, 1
         else:
@@ -240,8 +256,13 @@ class GUIApp(App):
         Clock.schedule_interval(gui.vidconnect, 1.0/30)
 
         # Clock.schedule_interval(gui.vidconnect2, 1.0/30)
+<<<<<<< HEAD
        # Clock.schedule_interval(gui.cmdout, 1.0/30)
         #Clock.schedule_interval(gui.limcheck, 1.0/30)
+=======
+        # Clock.schedule_interval(gui.cmdout, 1.0/30)
+        # Clock.schedule_interval(gui.limcheck, 1.0w/30)
+>>>>>>> 50c075362bb87b85430a1f78146228e34ad80ec1
         return gui
 
 
